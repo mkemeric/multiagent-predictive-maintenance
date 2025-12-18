@@ -1,0 +1,86 @@
+# HPE Private Cloud AI Environment Configuration
+# Usage: helm install pred-maint ./helm -f environments/pcai.yaml
+
+# ============================================
+# Image Configuration
+# ============================================
+# Update these to match your PC AI container registry
+image:
+  repository: registry.pcai.local/demos/multiagent-predictive-maintenance
+  pullPolicy: Always
+  tag: "latest"
+
+# If your registry requires authentication
+# imagePullSecrets:
+#   - name: pcai-registry-credentials
+
+# ============================================
+# Ingress Configuration
+# ============================================
+ingress:
+  enabled: true
+  className: "nginx"  # Adjust based on your PC AI ingress controller
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+  hosts:
+    - host: predictive-maintenance.pcai.local
+      paths:
+        - path: /
+          pathType: Prefix
+  # tls:
+  #   - secretName: predictive-maintenance-tls
+  #     hosts:
+  #       - predictive-maintenance.pcai.local
+
+# ============================================
+# Resource Configuration
+# ============================================
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2048Mi
+  requests:
+    cpu: 500m
+    memory: 1024Mi
+
+# ============================================
+# Model Configuration
+# ============================================
+config:
+  DATABASE_NAME: "agentic_predictive_maintenance"
+  # NVIDIA NIM models on MLIS
+  COMPLETION_MODEL: "meta/llama-3.1-70b-instruct"
+  EMBEDDING_MODEL: "nvidia/nv-embedqa-e5-v5"
+  NEXT_PUBLIC_ENV: "pcai"
+  NEXT_TELEMETRY_DISABLED: "1"
+
+# ============================================
+# Secrets Configuration
+# ============================================
+# Option 1: Set secrets directly (not recommended for production)
+# secrets:
+#   MONGODB_URI: "mongodb+srv://user:pass@cluster.mongodb.net/"
+#   MLIS_BASE_URL: "https://mlis.pcai.local/v1"
+#   MLIS_API_KEY: ""
+
+# Option 2: Use existing K8s secret (recommended)
+# Create secret first:
+#   kubectl create secret generic pred-maint-secrets \
+#     --from-literal=MONGODB_URI='mongodb+srv://...' \
+#     --from-literal=MLIS_BASE_URL='https://mlis.pcai.local/v1' \
+#     --from-literal=MLIS_API_KEY=''
+existingSecret: ""  # Set to "pred-maint-secrets" to use existing secret
+
+# ============================================
+# Pod Placement (Optional)
+# ============================================
+# If you need to run on specific nodes
+# nodeSelector:
+#   node-type: application
+
+# tolerations:
+#   - key: "dedicated"
+#     operator: "Equal"
+#     value: "application"
+#     effect: "NoSchedule"

@@ -1,0 +1,17 @@
+apiVersion: v2
+name: multiagent-predictive-maintenance
+description: MongoDB Multi-Agent Predictive Maintenance Demo for HPE Private Cloud AI
+type: application
+version: 0.1.0
+appVersion: "0.1.0-mlis"
+keywords:
+  - mongodb
+  - langchain
+  - langgraph
+  - predictive-maintenance
+  - nvidia-nim
+  - hpe-pcai
+  - mlis
+home: https://github.com/mongodb-industry-solutions/multiagent-predictive-maintenance
+maintainers:
+  - name: HPE Professional Services

@@ -1,0 +1,59 @@
+# Patterns to ignore when building packages.
+# This supports shell glob matching, relative path matching, and
+# temporary file ignoring.
+
+# Common VCS dirs
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+
+# Various IDEs
+.project
+.idea/
+*.tmproj
+.vscode/
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Application source (not needed in chart)
+src/
+public/
+data/
+scripts/
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Drone CI
+.drone.yml
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Documentation
+*.md
+LICENSE
+
+# Other
+*.log
+.DS_Store

@@ -1,12 +1,30 @@
+# Docker Compose for local development
+# Usage: docker-compose up --build
+
 services:
-  front:
+  app:
     build:
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    env_file:   
-      - .env  
-    volumes:
-      - ~/.aws/credentials:/home/nextjs/.aws/credentials:ro
-      - ~/.aws/config:/home/nextjs/.aws/config:ro
-      - ~/.aws/sso/cache:/home/nextjs/.aws/sso/cache:rw
+    env_file:
+      - .env
+    environment:
+      # Override or ensure these are set
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Resource limits (optional, for local testing)
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M

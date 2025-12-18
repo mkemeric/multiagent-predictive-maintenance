@@ -1,0 +1,84 @@
+════════════════════════════════════════════════════════════════════
+  MongoDB Multi-Agent Predictive Maintenance
+  HPE Private Cloud AI / MLIS Edition
+════════════════════════════════════════════════════════════════════
+
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+════════════════════════════════════════════════════════════════════
+  ACCESSING THE APPLICATION
+════════════════════════════════════════════════════════════════════
+
+{{- if .Values.ingress.enabled }}
+The application is available at:
+{{- range $host := .Values.ingress.hosts }}
+  {{- range .paths }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ .path }}
+  {{- end }}
+{{- end }}
+{{- else if contains "NodePort" .Values.service.type }}
+Get the application URL by running:
+  export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "predictive-maintenance.fullname" . }})
+  export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+{{- else if contains "LoadBalancer" .Values.service.type }}
+Get the application URL by running:
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+  kubectl get --namespace {{ .Release.Namespace }} svc -w {{ include "predictive-maintenance.fullname" . }}
+{{- else if contains "ClusterIP" .Values.service.type }}
+Get the application URL by running:
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "predictive-maintenance.name" . }},app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  export CONTAINER_PORT=$(kubectl get pod --namespace {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+  echo "Visit http://127.0.0.1:8080 to use your application"
+  kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8080:$CONTAINER_PORT
+{{- end }}
+
+════════════════════════════════════════════════════════════════════
+  CONFIGURATION
+════════════════════════════════════════════════════════════════════
+
+LLM Model:       {{ .Values.config.COMPLETION_MODEL }}
+Embedding Model: {{ .Values.config.EMBEDDING_MODEL }}
+Database:        {{ .Values.config.DATABASE_NAME }}
+
+{{- if not .Values.secrets.MLIS_BASE_URL }}
+
+⚠️  WARNING: MLIS_BASE_URL is not set!
+    The application will not be able to connect to the LLM.
+    
+    Update with:
+    helm upgrade {{ .Release.Name }} . --set secrets.MLIS_BASE_URL=<your-mlis-url>
+{{- end }}
+
+{{- if not .Values.secrets.MONGODB_URI }}
+
+⚠️  WARNING: MONGODB_URI is not set!
+    The application will not be able to connect to MongoDB Atlas.
+    
+    Update with:
+    helm upgrade {{ .Release.Name }} . --set secrets.MONGODB_URI=<your-mongodb-uri>
+{{- end }}
+
+════════════════════════════════════════════════════════════════════
+  USEFUL COMMANDS
+════════════════════════════════════════════════════════════════════
+
+# Check pod status
+kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+# View logs
+kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }} -f
+
+# Check configuration
+kubectl get configmap -n {{ .Release.Namespace }} {{ include "predictive-maintenance.configMapName" . }} -o yaml
+
+# Update secrets
+helm upgrade {{ .Release.Name }} {{ .Chart.Name }} \
+  --namespace {{ .Release.Namespace }} \
+  --set secrets.MONGODB_URI="mongodb+srv://..." \
+  --set secrets.MLIS_BASE_URL="https://..."
+
+════════════════════════════════════════════════════════════════════
