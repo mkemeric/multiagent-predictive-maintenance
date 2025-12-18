@@ -5,7 +5,7 @@ import {
 } from "@langchain/core/prompts";
 import { SystemMessage, HumanMessage } from "@langchain/core/messages";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";
-import { createBedrockClient } from "../../integrations/bedrock/chat.js";
+import { createBedrockClient } from "../../integrations/mlis/chat.js";
 import { StateAnnotation } from "./state.js";
 import { createAgentGraph as createFailureAgentGraph } from "../failure/graph.js";
 import { createAgentGraph as createWorkorderAgentGraph } from "../workorder/graph.js";

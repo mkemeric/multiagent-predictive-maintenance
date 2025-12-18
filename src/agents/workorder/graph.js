@@ -4,7 +4,7 @@ import {
   ChatPromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import { createBedrockClient } from "../../integrations/bedrock/chat.js";
+import { createBedrockClient } from "../../integrations/mlis/chat.js";
 import { StateAnnotation } from "./state.js";
 import { getTools } from "./tools.js";
 import { MongoDBSaver } from "@langchain/langgraph-checkpoint-mongodb";

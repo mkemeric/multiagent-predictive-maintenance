@@ -1,6 +1,6 @@
 {
   "name": "agentic-predictive-maintenance",
-  "version": "0.1.0",
+  "version": "0.1.0-mlis",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,21 +11,20 @@
     "embed": "node scripts/embed_collections.mjs",
     "generate_calendar": "node scripts/generate_production_calendar.mjs",
     "seed": "node scripts/seed.mjs",
+    "test:connection": "node scripts/test_connection.mjs",
     "tpn": "npx --no-install license-checker --production --json > third-party-licenses.json && node scripts/generate_third_party_notices.mjs"
   },
   "dependencies": {
-    "@aws-sdk/client-bedrock-runtime": "^3.828.0",
-    "@aws-sdk/credential-provider-node": "^3.835.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fullcalendar/core": "^6.1.17",
     "@fullcalendar/daygrid": "^6.1.17",
     "@fullcalendar/react": "^6.1.17",
-    "@langchain/aws": "^0.1.10",
     "@langchain/core": "^0.3.57",
     "@langchain/langgraph": "^0.3.1",
     "@langchain/langgraph-checkpoint-mongodb": "^0.0.6",
     "@langchain/mongodb": "^0.1.0",
+    "@langchain/openai": "^0.3.0",
     "@leafygreen-ui/avatar": "^2.0.10",
     "@leafygreen-ui/button": "^23.1.6",
     "@leafygreen-ui/card": "^12.0.9",
@@ -46,10 +45,8 @@
     "bson": "^6.10.4",
     "dotenv": "^16.5.0",
     "execa": "^9.6.0",
-    "i": "^0.3.7",
     "mongodb": "^6.17.0",
     "next": "^15.5.9",
-    "npm": "^11.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -60,5 +57,20 @@
     "eslint-config-next": "15.3.3",
     "license-checker": "^25.0.1",
     "tailwindcss": "^4"
+  },
+  "_comments": {
+    "refactored_for": "HPE Private Cloud AI MLIS",
+    "removed_aws_dependencies": [
+      "@aws-sdk/client-bedrock-runtime",
+      "@aws-sdk/credential-provider-node", 
+      "@langchain/aws"
+    ],
+    "added_mlis_dependencies": [
+      "@langchain/openai"
+    ],
+    "recommended_models": {
+      "completion": "meta/llama-3.1-70b-instruct",
+      "embedding": "nvidia/nv-embedqa-e5-v5"
+    }
   }
 }
